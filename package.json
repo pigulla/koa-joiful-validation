@@ -1,0 +1,65 @@
+{
+  "name": "koa-joiful-validation",
+  "version": "1.0.0",
+  "description": "Simple, opinionated request validation middleware for koa-router.",
+  "main": "src/joiful-validation.js",
+  "engine": {
+    "node": ">=6"
+  },
+  "scripts": {
+    "test": "npm run lint && npm run mocha-with-coverage && npm run check-coverage && npm run nsp",
+    "check-coverage": "istanbul check-coverage --statements 100 --functions 100 --branches 100 --lines 100",
+    "coveralls": "coveralls < reports/lcov.info",
+    "lint": "eslint .",
+    "mocha": "mocha --require test/setup.js test/**/*.spec.js",
+    "mocha-with-coverage": "istanbul cover --root src -- _mocha --require test/setup.js test/**/*.spec.js",
+    "nsp": "nsp check"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/pigulla/koa-joiful-validation.git"
+  },
+  "keywords": [
+    "koa",
+    "koa-router",
+    "router",
+    "joi",
+    "middleware",
+    "request",
+    "validation",
+    "validator"
+  ],
+  "author": "Raphael Pigulla <pigulla@four66.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pigulla/koa-joiful-validation/issues"
+  },
+  "homepage": "https://github.com/pigulla/koa-joiful-validation#readme",
+  "devDependencies": {
+    "chai": "3.5.0",
+    "chai-as-promised": "6.0.0",
+    "co": "4.6.0",
+    "coveralls": "2.11.14",
+    "eslint": "3.9.1",
+    "eslint-config-four66": "3.9.2",
+    "istanbul": "0.4.5",
+    "koa": "1.2.4",
+    "koa-bodyparser": "2.2.0",
+    "koa-router": "5.4.0",
+    "lodash.defer": "4.1.0",
+    "mocha": "3.1.2",
+    "nsp": "2.6.2",
+    "proxyquire": "1.7.10",
+    "sinon": "1.17.6",
+    "sinon-chai": "2.8.0"
+  },
+  "peerDependencies": {
+    "joi": "*"
+  },
+  "dependencies": {
+    "assert-plus": "1.0.0",
+    "bluebird": "3.4.6",
+    "es6-error": "4.0.0",
+    "http-status-codes": "1.0.6"
+  }
+}
