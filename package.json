@@ -9,7 +9,7 @@
   "scripts": {
     "test": "npm run lint && npm run mocha-with-coverage && npm run check-coverage && npm run nsp",
     "check-coverage": "istanbul check-coverage --statements 100 --functions 100 --branches 100 --lines 100",
-    "coveralls": "coveralls < reports/lcov.info",
+    "coveralls": "coveralls < coverage/lcov.info",
     "lint": "eslint .",
     "mocha": "mocha --require test/setup.js test/**/*.spec.js",
     "mocha-with-coverage": "istanbul cover --root src -- _mocha --require test/setup.js test/**/*.spec.js",
