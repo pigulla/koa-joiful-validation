@@ -13,8 +13,6 @@ This module currently supports Koa 1 only.
 
 ## Example
 
-bodyParser
-
 ```javascript
 const Joi = require('joi');
 const router = require('koa-router')();
@@ -22,8 +20,8 @@ const validate = require('koa-joiful-validation');
 
 router.get('/posts', validate({
     query: {
-        offset: Joi.number().integer().min(0).default(0).optional()
-        limit: Joi.number().integer().min(0).default(100).optional()
+        offset: Joi.number().integer().positive().default(0).optional()
+        limit: Joi.number().integer().positive().default(100).optional()
     },
     body: { /* ... */ },   // for the request body
     params: { /* ... */ }, // for route parameters
@@ -46,15 +44,38 @@ npm install --save koa-joiful-validation
 
 Please note that this module has [Joi](https://github.com/hapijs/joi) as a peer dependency (practically any version will do).
 
+In order for the request body validation to work correctly you will want to use [koa-bodyparser](https://github.com/koajs/bodyparser).
+
 ## Opinions
 This module is quite opinionated. If it doesn't suit your needs, feel free to open an issue, create a pull request or just fork the project. In particular, keep the following things in mind: 
 
- - If a validation fails, so does the request with a `422 UNPROCESSABLE ENTITY` error.
+ - If a validation fails, so does the request with a `422 Unprocessable Entity` error.
  - All parameters are required by default (`presence: 'required'`).
- - When no schema is given, the empty schema is assumed. This means that `router.post('/', validate(), ...)` will not accept any query or body parameters.
+ - Additional parameters, i.e. parameters not specified in the schemas, are forbidden by default.
+ - When no schema is given, the empty schema is assumed. This means that `router.post('/', validate(), ...)` will not accept any query, body or url parameters.
  - By default, query and url parameters are converted (e.g., cast to numbers as necessary), but body parameters are not.
 
 ## Details
+
+### Route Parameters
+If you have route parameters, you *need* to add them to your validation config in order to work:
+```javascript
+router.get('/entity/:id', validate(), function* () {
+    // this won't work because params.id will be rejected
+});
+```
+
+So instead, do it like this:
+```javascript
+router.get('/entity/:id', validate({
+    params: {
+        id: Joi.number().integer().min(1)
+    }
+}), function* () {
+    // now this.state.params.id is guaranteed to be a positive integer
+});
+```
+If you do not want to actually validate the parameter, simply use `Joi.any()`. 
 
 ### Custom validation functions
 You can pass a list of custom validation functions as a second parameter:
@@ -74,24 +95,25 @@ router.get('/equalsTen', validate({
 ]), function* () {
     // ...
 });
-````
+```
 These functions are run in sequence after the schema validations (and only if those succeed). If a function returns a string, that validation is considered to have failed and the string becomes the error message. Any other return value is interpreted as a success.
 
 The functions are executed in the same context as the middleware itself so you have access to `this.request`, `this.state` etc.
 
-If your validation is asynchronous, simply use a generator. To fail the validation reject it with an arbitrary error:
+If your validation is asynchronous, simply use a generator:
 ```javascript
 router.get('/:id', validate({
     params: { id: Joi.number() }
 }, [
     function* () {
         const entity = yield this.db.findOne(this.state.params.id);
-        return entity.isSpecial ? Promise.reject(new Error('too special!')) : entity;
+        return entity.isSpecial ? 'too special!' : entity;
     }
-], function* () {
+]), function* () {
     // ...
 });
-````
+```
+Please note that throwing an error from a validation function will abort the request with a `500 Internal Server Error`.
 
 ### Auto-wrapping
 
