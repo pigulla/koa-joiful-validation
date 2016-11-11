@@ -1,6 +1,6 @@
 {
   "name": "koa-joiful-validation",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Simple, opinionated request validation middleware for koa-router.",
   "main": "src/joiful-validation.js",
   "engines": {
