@@ -211,6 +211,50 @@ describe('End-to-End', function () {
         });
     });
 
+    describe('/route/:param/sweet', function () {
+        before(function () {
+            const router = new Router();
+
+            router.all('/route/:param/sweet', validation({
+                query: Joi.object().keys({}).unknown(true)
+            }), echo);
+            app.use(router.routes());
+        });
+
+        it('does not match', function () {
+            return get('/route/42/sweet', {}, {})
+                .spread(function (message, body) {
+                    expect(message.statusCode).to.equal(UNPROCESSABLE_ENTITY);
+                    expect(body.message).to.equal('Invalid url parameter at .param: "param" is not allowed');
+                });
+        });
+    });
+
+    describe('/extra-query-params', function () {
+        before(function () {
+            const router = new Router();
+
+            router.all('/extra-query-params', validation({
+                query: Joi.object().keys({}).unknown(true)
+            }), echo);
+            app.use(router.routes());
+        });
+
+        it('allows extra query parameters', function () {
+            return get('/extra-query-params', { x: 42 }, {})
+                .spread(function (message, body) {
+                    expect(message.statusCode).to.equal(OK);
+                    expect(body).to.deep.equal({
+                        params: {},
+                        query: {
+                            x: '42'
+                        },
+                        body: {}
+                    });
+                });
+        });
+    });
+
     describe('/route/with/:param/:id', function () {
         before(function () {
             const router = new Router();

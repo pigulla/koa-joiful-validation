@@ -9,13 +9,13 @@ const proxyquire = require('proxyquire');
 const status = require('http-status-codes');
 
 const { ValidationError } = require('../../src/validate');
-const { EvaluationError } = require('../../src/evaluateValidators');
+const { EvaluationError } = require('../../src/evaluateCustomValidators');
 const validateMock = Sinon.stub();
 const evaluateMock = Sinon.stub();
 
 const validation = proxyquire('../../src/joiful-validation', {
     './validate': { validate: validateMock },
-    './evaluateValidators': { evaluate: evaluateMock }
+    './evaluateCustomValidators': { evaluate: evaluateMock }
 });
 
 describe('Unit joiful-validation', function () {
@@ -89,7 +89,7 @@ describe('Unit joiful-validation', function () {
         });
 
         describe('when a custom functions fails', function () {
-            it('with code 422 for an EvaluationError', function () {
+            it('with code 500 for an EvaluationError', function () {
                 const fn = validation();
                 const error = new EvaluationError();
 
@@ -100,7 +100,7 @@ describe('Unit joiful-validation', function () {
                     .then(function () {
                         expect(ctx.throw)
                             .to.have.been.calledOnce.and
-                            .to.have.been.calledWith(status.UNPROCESSABLE_ENTITY);
+                            .to.have.been.calledWith(status.INTERNAL_SERVER_ERROR, error);
                         expect(next).not.to.have.been.called;
                     });
             });

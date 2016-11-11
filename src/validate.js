@@ -5,6 +5,10 @@ const ExtendableError = require('es6-error');
 const Joi = require('joi');
 
 class ValidationError extends ExtendableError {
+    /**
+     * @param {string} source
+     * @param {Error} cause
+     */
     constructor(source, cause) {
         const srcStr = source === 'params' ? 'url' : source;
         const details = cause.details[0];

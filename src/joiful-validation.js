@@ -5,7 +5,7 @@ const Joi = require('joi');
 const status = require('http-status-codes');
 
 const { validate, ValidationError } = require('./validate');
-const { evaluate, EvaluationError } = require('./evaluateValidators');
+const { evaluate } = require('./evaluateCustomValidators');
 
 /**
  * @param {Object.<String, Joi.Schema>=} schemas
@@ -31,7 +31,7 @@ function joifulValidate(schemas = {}, functions = []) {
 
             yield evaluate(this, functions);
         } catch (err) {
-            if (err instanceof ValidationError || err instanceof EvaluationError) {
+            if (err instanceof ValidationError) {
                 return this.throw(status.UNPROCESSABLE_ENTITY, err);
             } else {
                 return this.throw(status.INTERNAL_SERVER_ERROR, err);

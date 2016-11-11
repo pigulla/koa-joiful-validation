@@ -6,7 +6,7 @@ const co = require('co');
 const defer = require('lodash.defer');
 const Promise = require('bluebird');
 
-const { evaluate, EvaluationError } = require('../../src/evaluateValidators');
+const { evaluate, EvaluationError } = require('../../src/evaluateCustomValidators');
 
 function promise() {
     let resolve, reject;
@@ -53,7 +53,7 @@ function deferUntil(fn, max = 100) {
     });
 }
 
-describe('Unit evaluateValidators', function () {
+describe('Unit evaluateCustomValidators', function () {
     let ctx;
 
     beforeEach(function () {

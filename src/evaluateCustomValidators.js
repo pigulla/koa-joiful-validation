@@ -6,6 +6,9 @@ const ExtendableError = require('es6-error');
 const Promise = require('bluebird');
 
 class EvaluationError extends ExtendableError {
+    /**
+     * @param {Error} cause
+     */
     constructor(cause) {
         super('Error while evaluating validation');
 
