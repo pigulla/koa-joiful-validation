@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Simple, opinionated request validation middleware for koa-router.",
   "main": "src/joiful-validation.js",
-  "engine": {
+  "engines": {
     "node": ">=6"
   },
   "scripts": {
